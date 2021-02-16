@@ -2,6 +2,12 @@
 
 This repository contains the code for the [JFrog CircleCI Demo webinar](https://devops.com/webinars/). This webinar is jointly presented by CircleCI and JFrog and discusses how to develop a CI/CD pipeline with [CircleCI](https://www.circleci.com/) and [the JFrog Platform](https://jfrog.com/platform/). It contains a npm application and dockerfile. A CircleCI pipeline builds and deploys the application.
 
+## Prerequisites
+This demo requires CircleCI and JFrog. Set up free accounts!
+
+* [CircleCI Free Subscription](https://circleci.com/pricing/)
+* [JFrog Free Subscription](https://jfrog.com/artifactory/start-free/#saas) 
+
 ## CircleCI Pipeline Workflow
 ![circleci-jfrog-pipeline](https://user-images.githubusercontent.com/6440106/108023777-2936ac00-6fd8-11eb-9513-474fa9f97f1f.png)
 
