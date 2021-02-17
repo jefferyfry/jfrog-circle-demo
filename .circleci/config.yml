@@ -48,7 +48,7 @@ jobs:
       - run:
           name: Docker Push
           command: |
-            jfrog rt dp $ARTIFACTORY_SERVER/demo-build:$CIRCLE_SHA1 docker --build-name=demo-build --build-number=$CIRCLE_SHA1
+            jfrog rt dp $ARTIFACTORY_SERVER/demo-build:$CIRCLE_SHA1 docker-local --build-name=demo-build --build-number=$CIRCLE_SHA1
       - run:
           name: Build Publish with Env Vars
           command: |
