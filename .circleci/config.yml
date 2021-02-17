@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   node: circleci/node@2.0.3
   artifactory: circleci/artifactory@1.0.0
+  aws-ecs: circleci/aws-ecs@2.0.0
 
 jobs:
   build-scan:
@@ -16,20 +17,47 @@ jobs:
           artifactory-key: ARTIFACTORY_API_KEY
           artifactory-url: ARTIFACTORY_URL
           artifactory-user: ARTIFACTORY_USER
-      - run: 
+      - run:
+          name: Configure JFrog CLI
+          command: |
+            jfrog rt c $ARTIFACTORY_SERVER npm --url=$ARTIFACTORY_URL --user=$ARTIFACTORY_USER --apikey=$ARTIFACTORY_API_KEY
+      - run:
+          name: Configure NPM
+          command: |
+            jfrog rt npmc --repo-resolve=npm --repo-deploy=npm --server-id-resolve=$ARTIFACTORY_SERVER
+      - run:
+          name: NPM Install
+          command: |
+            jfrog rt npm-install --build-name=demo-build --build-number=$CIRCLE_SHA1
+      - run:
+          name: NPM Publish
+          command: |
+            jfrog rt npm-publish --build-name=demo-build --build-number=$CIRCLE_SHA1
+      - run:
+          name: Build Publish
+          command: |
+            jfrog rt build-publish --build-name=demo-build --build-number=$CIRCLE_SHA1
+      - run:
           name: Build Docker image
           command: |
-            docker build -t $ARTIFACTORY_DOCKER_REGISTRY/demo-build:$CIRCLE_SHA1 .
+            docker build -t $ARTIFACTORY_REGISTRY/demo-build:$CIRCLE_SHA1 .
       - run:
           name: Log in to Docker
           command: |
-            docker login --username=$ARTIFACTORY_USER --password=$ARTIFACTORY_API_KEY $ARTIFACTORY_DOCKER_REGISTRY
-      - run: 
-          name: JFrog Commands 
+            docker login --username=$ARTIFACTORY_USER --password=$ARTIFACTORY_API_KEY $ARTIFACTORY_SERVER
+      - run:
+          name: Docker Push
           command: |
-            jfrog rt dp $ARTIFACTORY_DOCKER_REGISTRY/demo-build:$CIRCLE_SHA1 circle-artifactory --build-name=demo-build --build-number=$CIRCLE_SHA1
+            jfrog rt dp $ARTIFACTORY_SERVER/demo-build:$CIRCLE_SHA1 docker --build-name=demo-build --build-number=$CIRCLE_SHA1
+      - run:
+          name: Build Publish with Env Vars
+          command: |
             jfrog rt bce demo-build $CIRCLE_SHA1
             jfrog rt bp demo-build $CIRCLE_SHA1
+            jfrog rt bs demo-build $CIRCLE_SHA1
+      - run:
+          name: Build Xray Scan
+          command: |
             jfrog rt bs demo-build $CIRCLE_SHA1
   promote:
     docker:
@@ -43,16 +71,12 @@ jobs:
           artifactory-user: ARTIFACTORY_USER
       - run:
           name: Promote
-          command: jfrog rt bpr demo-build $CIRCLE_SHA1 docker-stg-local
-            
+          command: jfrog rt bpr demo-build $CIRCLE_SHA1 docker-local
+
 workflows:
   build_test_deploy:
     jobs:
-      - node/test:
-          name: node-tests
       - build-scan:
-          requires:
-            - node-tests
       - hold:
           type: approval
           requires:
@@ -68,4 +92,3 @@ workflows:
               only: master
 
 
-              
