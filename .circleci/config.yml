@@ -40,7 +40,7 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -t $ARTIFACTORY_REGISTRY/demo-build:$CIRCLE_SHA1 .
+            docker build -t $ARTIFACTORY_SERVER/demo-build:$CIRCLE_SHA1 .
 #      - run:
 #          name: Log in to Docker
 #          command: |
