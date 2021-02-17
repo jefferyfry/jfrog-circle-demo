@@ -17,10 +17,6 @@ jobs:
           artifactory-key: ARTIFACTORY_API_KEY
           artifactory-url: ARTIFACTORY_URL
           artifactory-user: ARTIFACTORY_USER
-      - run:
-          name: Configure JFrog CLI
-          command: |
-            jfrog rt c $ARTIFACTORY_SERVER --url=$ARTIFACTORY_URL --user=$ARTIFACTORY_USER --apikey=$ARTIFACTORY_API_KEY
 #      - run:
 #          name: Configure NPM
 #          command: |
@@ -40,7 +36,7 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -t $ARTIFACTORY_SERVER/demo-build:$CIRCLE_SHA1 .
+            docker build -t $ARTIFACTORY_SERVER/docker/demo-build:$CIRCLE_SHA1 .
 #      - run:
 #          name: Log in to Docker
 #          command: |
@@ -48,7 +44,7 @@ jobs:
       - run:
           name: Docker Push
           command: |
-            jfrog rt dp $ARTIFACTORY_SERVER/demo-build:$CIRCLE_SHA1 docker-local --build-name=demo-build --build-number=$CIRCLE_SHA1
+            jfrog rt dp $ARTIFACTORY_SERVER/docker/demo-build:$CIRCLE_SHA1 docker --build-name=demo-build --build-number=$CIRCLE_SHA1
       - run:
           name: Build Publish with Env Vars
           command: |
