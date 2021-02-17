@@ -69,18 +69,6 @@ jobs:
       - run:
           name: Promote
           command: jfrog rt bpr demo-build $CIRCLE_SHA1 docker-local
-  aws-deploy:
-    docker:
-      - image: 'cimg/python:3.9.1'
-    steps:
-      - aws-cli/setup:
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-region: AWS_DEFAULT_REGION
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-      - aws-ecs/deploy-service-update:
-          cluster-name: 'jfrog-circleci-demo'
-          container-image-name-updates: 'container=$ARTIFACTORY_SERVER/docker/demo-build,tag=${CIRCLE_SHA1}'
-          family: 'jfrog-circleci-demo-service'
 
 workflows:
   build_test_deploy:
@@ -99,7 +87,13 @@ workflows:
           filters:
             branches:
               only: master
-      - aws-deploy:
+      - aws-ecs/deploy-service-update:
+          cluster-name: 'jfrog-circleci-demo'
+          container-image-name-updates: 'container=$ARTIFACTORY_SERVER/docker/demo-build,tag=${CIRCLE_SHA1}'
+          family: 'jfrog-circleci-demo-service'
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-region: AWS_DEFAULT_REGION
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           requires:
             - promote
 
