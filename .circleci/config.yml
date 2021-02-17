@@ -76,7 +76,7 @@ jobs:
 workflows:
   build_test_deploy:
     jobs:
-      - build-scan:
+      - build-scan
       - hold:
           type: approval
           requires:
