@@ -20,11 +20,11 @@ jobs:
       - run:
           name: Configure JFrog CLI
           command: |
-            jfrog rt c $ARTIFACTORY_SERVER npm --url=$ARTIFACTORY_URL --user=$ARTIFACTORY_USER --apikey=$ARTIFACTORY_API_KEY
+            jfrog rt c $ARTIFACTORY_SERVER --url=$ARTIFACTORY_URL --user=$ARTIFACTORY_USER --apikey=$ARTIFACTORY_API_KEY
       - run:
           name: Configure NPM
           command: |
-            jfrog rt npmc --repo-resolve=npm --repo-deploy=npm --server-id-resolve=$ARTIFACTORY_SERVER
+            jfrog rt npmc --repo-resolve=npm --repo-deploy=npm --server-id-resolve=$ARTIFACTORY_SERVER --server-id-deploy=$ARTIFACTORY_SERVER
       - run:
           name: NPM Install
           command: |
