@@ -9,7 +9,7 @@ orbs:
 jobs:
   build-scan:
     docker:
-      - image: cimg/node:13.10.1
+      - image: cimg/node:13.10.0
     steps:
       - checkout
       - setup_remote_docker
@@ -58,7 +58,7 @@ jobs:
             jfrog rt bs demo-build $CIRCLE_SHA1
   promote:
     docker:
-      - image: cimg/node:13.10.1
+      - image: cimg/node:13.10.0
     steps:
       - checkout
       - artifactory/install
