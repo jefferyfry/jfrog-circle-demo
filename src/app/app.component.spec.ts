@@ -22,10 +22,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('demo-app');
   });
 
-  it('should render title', () => {
+  it('should render scene', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('demo-app app is running!');
+    expect(compiled.querySelector('a-scene')).not.toBeUndefined();
   });
 });
