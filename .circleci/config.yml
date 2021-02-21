@@ -24,12 +24,15 @@ jobs:
      - checkout
      - node/install-packages
      - run: 
-        command: npm run test
+        command: |
+          npm run test -- --watch false
+
   build-scan:
     executor: node
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          docker_layer_caching: true
       - artifactory/install
       - artifactory/configure:
           artifactory-key: ARTIFACTORY_API_KEY
