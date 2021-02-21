@@ -35,30 +35,30 @@ jobs:
           artifactory-key: ARTIFACTORY_API_KEY
           artifactory-url: ARTIFACTORY_URL
           artifactory-user: ARTIFACTORY_USER
-#      - run:
-#          name: Configure NPM
-#          command: |
-#            jfrog rt npmc --repo-resolve=npm --repo-deploy=npm --server-id-resolve=$ARTIFACTORY_SERVER --server-id-deploy=$ARTIFACTORY_SERVER
-#      - run:
-#          name: NPM Install
-#          command: |
-#            jfrog rt npm-install --build-name=demo-build --build-number=$CIRCLE_SHA1
-#      - run:
-#          name: NPM Publish
-#          command: |
-#            jfrog rt npm-publish --build-name=demo-build --build-number=$CIRCLE_SHA1
-#      - run:
-#          name: Build Publish
-#          command: |
-#            jfrog rt build-publish --build-name=demo-build --build-number=$CIRCLE_SHA1
+      - run:
+          name: Configure NPM
+          command: |
+            jfrog rt npmc --repo-resolve=npm --repo-deploy=npm --server-id-resolve=$ARTIFACTORY_SERVER --server-id-deploy=$ARTIFACTORY_SERVER
+      - restore_cache:
+          keys:
+            - v1-npm-deps-{{ checksum "package-lock.json" }}
+            - v1-npm-deps-
+      - run:
+          name: NPM Install
+          command: |
+            jfrog rt npm-install --build-name=demo-build --build-number=$CIRCLE_SHA1
+      - run:
+          name: NPM Publish
+          command: |
+            jfrog rt npm-publish --build-name=demo-build --build-number=$CIRCLE_SHA1
+      - run:
+          name: Build Publish
+          command: |
+            jfrog rt build-publish --build-name=demo-build --build-number=$CIRCLE_SHA1
       - run:
           name: Build Docker image
           command: |
             docker build -t $ARTIFACTORY_SERVER/docker/demo-build:$CIRCLE_SHA1 .
-#      - run:
-#          name: Log in to Docker
-#          command: |
-#            docker login --username=$ARTIFACTORY_USER --password=$ARTIFACTORY_API_KEY $ARTIFACTORY_SERVER
       - run:
           name: Docker Push
           command: |
@@ -104,15 +104,15 @@ workflows:
           filters:
             branches:
               only: master
-      - aws-ecs/deploy-service-update:
-          cluster-name: 'jfrog-circleci-demo'
-          container-image-name-updates: 'container=$ARTIFACTORY_SERVER/docker/demo-build,tag=${CIRCLE_SHA1}'
-          family: 'jfrog-circleci-demo-service'
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-region: AWS_DEFAULT_REGION
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          requires:
-            - promote
+#      - aws-ecs/deploy-service-update:
+#          cluster-name: 'jfrog-circleci-demo'
+#          container-image-name-updates: 'container=$ARTIFACTORY_SERVER/docker/demo-build,tag=${CIRCLE_SHA1}'
+#          family: 'jfrog-circleci-demo-service'
+#          aws-access-key-id: AWS_ACCESS_KEY_ID
+#          aws-region: AWS_DEFAULT_REGION
+#          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+#          requires:
+#            - promote
 
 
 
