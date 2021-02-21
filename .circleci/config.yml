@@ -46,7 +46,7 @@ jobs:
       - run:
           name: NPM Install
           command: |
-            jfrog rt npm-install --build-name=demo-build --build-number=$CIRCLE_SHA1
+            jfrog rt npm-ci --build-name=demo-build --build-number=$CIRCLE_SHA1
       - run:
           name: NPM Publish
           command: |
