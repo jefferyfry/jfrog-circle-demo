@@ -31,14 +31,14 @@ jobs:
       - checkout
       - setup_remote_docker
       - artifactory/install
-      - artifactory/configure:
-          artifactory-key: ARTIFACTORY_API_KEY
-          artifactory-url: ARTIFACTORY_URL
-          artifactory-user: ARTIFACTORY_USER
+      - run:
+          name: Configure JFrog CLI
+          command: |
+            jfrog rt c $ARTIFACTORY_SERVER --url=$ARTIFACTORY_URL --user=$ARTIFACTORY_USER --apikey=$ARTIFACTORY_API_KEY
       - run:
           name: Configure NPM
           command: |
-            jfrog rt npmc --repo-resolve=npm --repo-deploy=npm
+            jfrog rt npmc --repo-resolve=npm --repo-deploy=npm --server-id-resolve=$ARTIFACTORY_SERVER --server-id-deploy=$ARTIFACTORY_SERVER
       - restore_cache:
           keys:
             - v1-npm-deps-{{ checksum "package-lock.json" }}
