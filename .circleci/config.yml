@@ -38,7 +38,7 @@ jobs:
       - run:
           name: Configure NPM
           command: |
-            jfrog rt npmc --repo-resolve=npm --repo-deploy=npm --server-id-resolve=$ARTIFACTORY_SERVER --server-id-deploy=$ARTIFACTORY_SERVER
+            jfrog rt npmc --repo-resolve=npm --repo-deploy=npm
       - restore_cache:
           keys:
             - v1-npm-deps-{{ checksum "package-lock.json" }}
