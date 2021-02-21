@@ -46,7 +46,11 @@ jobs:
       - run:
           name: NPM Install
           command: |
-            jfrog rt npm-ci --build-name=demo-build --build-number=$CIRCLE_SHA1
+            jfrog rt npm-install --build-name=demo-build --build-number=$CIRCLE_SHA1 --verbose
+      - save_cache:
+          key: v1-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
       - run:
           name: NPM Publish
           command: |
