@@ -59,7 +59,7 @@ jobs:
       - run:
           name: Build Publish
           command: |
-            jfrog rt build-publish --build-name=demo-build --build-number=$CIRCLE_SHA1
+            jfrog rt build-publish demo-build $CIRCLE_SHA1
       - run:
           name: Build Docker image
           command: |
@@ -69,11 +69,10 @@ jobs:
           command: |
             jfrog rt dp $ARTIFACTORY_SERVER/docker/demo-build:$CIRCLE_SHA1 docker --build-name=demo-build --build-number=$CIRCLE_SHA1
       - run:
-          name: Build Publish with Env Vars
+          name: Final build Publish with Env Vars
           command: |
             jfrog rt bce demo-build $CIRCLE_SHA1
             jfrog rt bp demo-build $CIRCLE_SHA1
-            jfrog rt bs demo-build $CIRCLE_SHA1
       - run:
           name: Build Xray Scan
           command: |
