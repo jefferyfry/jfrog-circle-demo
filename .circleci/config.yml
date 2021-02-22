@@ -47,7 +47,7 @@ jobs:
           name: NPM Install
           no_output_timeout: 30m
           command: |
-            jfrog rt npm-ci --build-name=demo-build --build-number=$CIRCLE_SHA1
+            npm install
       - save_cache:
           key: v1-deps-{{ checksum "package-lock.json" }}
           paths:
