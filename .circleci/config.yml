@@ -57,10 +57,10 @@ jobs:
       #     name: NPM Publish
       #     command: |
       #       jfrog rt npm-publish --build-name=demo-build --build-number=$CIRCLE_SHA1
-      - run:
-          name: Build Publish
-          command: |
-            jfrog rt build-publish demo-build $CIRCLE_SHA1
+      # - run:
+      #     name: Build Publish
+      #     command: |
+      #       jfrog rt build-publish demo-build $CIRCLE_SHA1
       - run:
           name: Build Docker image
           command: |
