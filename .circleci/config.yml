@@ -29,7 +29,8 @@ jobs:
     executor: node
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          docker_layer_caching: true
       - artifactory/install
       - run:
           name: Configure JFrog CLI
@@ -43,19 +44,19 @@ jobs:
           keys:
             - v1-npm-deps-{{ checksum "package-lock.json" }}
             - v1-npm-deps-
-      - run:
-          name: NPM Install
-          no_output_timeout: 30m
-          command: |
-            jfrog rt npm-install --build-name=demo-build --build-number=$CIRCLE_SHA1
-      - save_cache:
-          key: v1-deps-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules
-      - run:
-          name: NPM Publish
-          command: |
-            jfrog rt npm-publish --build-name=demo-build --build-number=$CIRCLE_SHA1
+      # - run:
+      #     name: NPM Install
+      #     no_output_timeout: 30m
+      #     command: |
+      #       jfrog rt npm-install --build-name=demo-build --build-number=$CIRCLE_SHA1
+      # - save_cache:
+      #     key: v1-deps-{{ checksum "package-lock.json" }}
+      #     paths:
+      #       - node_modules
+      # - run:
+      #     name: NPM Publish
+      #     command: |
+      #       jfrog rt npm-publish --build-name=demo-build --build-number=$CIRCLE_SHA1
       - run:
           name: Build Publish
           command: |
