@@ -109,7 +109,6 @@ workflows:
             branches:
               only: master
       - aws-ecs/update-task-definition:
-          cluster-name: 'jfrog-circleci-demo'
           family: 'jfrog-circleci-demo'
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-region: AWS_DEFAULT_REGION
