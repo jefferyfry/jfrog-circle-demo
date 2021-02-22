@@ -108,15 +108,15 @@ workflows:
           filters:
             branches:
               only: master
-#      - aws-ecs/deploy-service-update:
-#          cluster-name: 'jfrog-circleci-demo'
-#          container-image-name-updates: 'container=$ARTIFACTORY_SERVER/docker/demo-build,tag=${CIRCLE_SHA1}'
-#          family: 'jfrog-circleci-demo-service'
-#          aws-access-key-id: AWS_ACCESS_KEY_ID
-#          aws-region: AWS_DEFAULT_REGION
-#          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-#          requires:
-#            - promote
+      - aws-ecs/update-task-definition:
+          cluster-name: 'jfrog-circleci-demo'
+          family: 'jfrog-circleci-demo'
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-region: AWS_DEFAULT_REGION
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          container-image-name-updates: 'container=demo-build,image-and-tag=circle.jfrog.io/docker/demo-build:${CIRCLE_SHA1}'
+          requires:
+            - promote
 
 
 
