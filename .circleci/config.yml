@@ -57,19 +57,10 @@ jobs:
           repository: 'docker'
           build-name: 'demo-build'
           build-number: ${CIRCLE_SHA1}
-
-      # - run:
-      #     name: Docker Push
-      #     command: |
-      #       jfrog rt dp $ARTIFACTORY_SERVER/docker/demo-build:$CIRCLE_SHA1 docker --build-name=demo-build --build-number=$CIRCLE_SHA1
       - artifactory/build-integration:
           build-name: 'demo-build'
           build-number: ${CIRCLE_SHA1}
-      # - run:
-      #     name: Final build Publish with Env Vars
-      #     command: |
-      #       jfrog rt bce demo-build $CIRCLE_SHA1
-      #       jfrog rt bp demo-build $CIRCLE_SHA1
+          include-git: false
       - run:
           name: Build Xray Scan
           command: |
