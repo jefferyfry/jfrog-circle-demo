@@ -39,19 +39,7 @@ jobs:
           name: Configure NPM
           command: |
             jfrog rt npmc --repo-resolve=npm --repo-deploy=npm --server-id-resolve=$ARTIFACTORY_SERVER --server-id-deploy=$ARTIFACTORY_SERVER
-      - restore_cache:
-          keys:
-            - v1-deps-{{ checksum "package-lock.json" }}
-            - v1-deps-
-      - run:
-          name: NPM Install
-          no_output_timeout: 30m
-          command: |
-            npm install
-      - save_cache:
-          key: v1-deps-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules
+      - node/install-packages
       - run:
           name: NPM Publish
           command: |
@@ -64,15 +52,24 @@ jobs:
           name: Build Docker image
           command: |
             docker build -t $ARTIFACTORY_SERVER/docker/demo-build:$CIRCLE_SHA1 .
-      - run:
-          name: Docker Push
-          command: |
-            jfrog rt dp $ARTIFACTORY_SERVER/docker/demo-build:$CIRCLE_SHA1 docker --build-name=demo-build --build-number=$CIRCLE_SHA1
-      - run:
-          name: Final build Publish with Env Vars
-          command: |
-            jfrog rt bce demo-build $CIRCLE_SHA1
-            jfrog rt bp demo-build $CIRCLE_SHA1
+      - artifactory/docker-publish:
+          docker-tag: $ARTIFACTORY_SERVER/docker/demo-build:$CIRCLE_SHA1
+          repository: 'docker'
+          build-name: 'demo-build'
+          build-number: ${CIRCLE_SHA1}
+
+      # - run:
+      #     name: Docker Push
+      #     command: |
+      #       jfrog rt dp $ARTIFACTORY_SERVER/docker/demo-build:$CIRCLE_SHA1 docker --build-name=demo-build --build-number=$CIRCLE_SHA1
+      - artifactory/build-integration:
+          build-name: 'demo-build'
+          build-number: ${CIRCLE_SHA1}
+      # - run:
+      #     name: Final build Publish with Env Vars
+      #     command: |
+      #       jfrog rt bce demo-build $CIRCLE_SHA1
+      #       jfrog rt bp demo-build $CIRCLE_SHA1
       - run:
           name: Build Xray Scan
           command: |
