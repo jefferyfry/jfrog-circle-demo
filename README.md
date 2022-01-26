@@ -1,5 +1,7 @@
 # JFrog CircleCI Demo
 
+[![Git](https://app.soluble.cloud/api/v1/public/badges/5524d24a-b822-4779-b4b6-1acd85eb6706.svg?orgId=604336610407)](https://app.soluble.cloud/repos/details/github.com/jefferyfry/jfrog-circle-demo?orgId=604336610407)  
+
 This repository contains the code for the [JFrog CircleCI Demo webinar](https://devops.com/webinars/). This webinar is jointly presented by CircleCI and JFrog and discusses how to develop a CI/CD pipeline with [CircleCI](https://www.circleci.com/) and [the JFrog Platform](https://jfrog.com/platform/). It contains a npm application and dockerfile. A CircleCI pipeline builds and deploys the application.
 
 ## Prerequisites
